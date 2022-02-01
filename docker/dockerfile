@@ -1,0 +1,22 @@
+# Dockerfile e visto como arquivo de bloqueio
+# bloqueia que tentar criar um ambiente diferente
+
+# Pegar a imagem base
+FROM python:3.9
+
+# Definir variáveis de ambiente
+#   PYTHONDONTWRITEBYTECODE 1
+#       PYTHON DONT WRITE BYTECODE ( NÃO ESCREVA O BYTECODE )
+ENV PYTHONDONTWRITEBYTECODE 1 
+ENV PYTHONUNBUFFERED 1
+
+
+WORKDIR /source
+COPY ./source/Pipfile ./source/Pipfile.lock /source/
+RUN pip install pipenv && pipenv install --system
+COPY . /source/
+
+COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
